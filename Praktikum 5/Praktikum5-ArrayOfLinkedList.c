@@ -66,9 +66,9 @@ void tambahElemen(struct ArrayList* list, int index, char* kota, char* nama)
     list->array[index] = node;
 }
 
-void hapusElemen(struct ArrayList* list, char* nama)
+void hapusElemenNama(struct ArrayList* list, char* nama)
 /*  DESKRIPSI   : Menghapus salah satu elemen di indeks yang sama
-    I.S         : Elemen masih ada dan terhubung
+    I.S         : Elemen satu nama masih ada dan terhubung
     F.S         : Elemen sudah terhapus dan elemen sebelumnya sudah terhubung dengan elemen selanjutnya
 */
 {
@@ -107,11 +107,51 @@ void hapusElemen(struct ArrayList* list, char* nama)
     }
 }
 
+void hapusElemenKota(struct ArrayList* list, char* kota)
+/*  DESKRIPSI   : Menghapus salah satu elemen di indeks yang sama
+    I.S         : Elemen kota masih ada dan terhubung
+    F.S         : Elemen kota beserta sambungan-sambungannya (Mahasiswa) terhapus
+*/
+{
+    bool ada = false;
+    for(int i = 0; i < list->jumlah; i++){
+        struct Node* first = list->array[i];
+        struct Node* prev = NULL;
+        while(first != NULL){
+            if(first->kota == kota) {
+                if(first == list->array[i]) {
+                    // hapus node awal
+                    list->array[i] = first->next;
+                    first->next = NULL;
+                    free(first);
+                    first = list->array[i];
+                }
+                else {
+                    // hapus node tengah atau akhir
+                    prev->next = first->next;
+                    first->next = NULL;
+                    free(first);
+                    first = prev->next;
+                }
+                ada = true;
+            }
+            else {
+                prev = first;
+                first = first->next;
+            }
+        }
+    }
+
+    if (ada == false){
+        printf("Tidak ada kota %s yang terdata.\n", kota);
+    }
+
+}
 
 /*================================ PROGRAM UTAMA ================================*/
 int main(){
     //Buatlah array list sejumlah 3
-    struct ArrayList* list = buatArrayList(3);
+    struct ArrayList* list = buatArrayList(5);
 
     //Tambahkan elemen dengan parameter(list, indeks, kota, nama)
     tambahElemen(list, 0, "Bandung", "Banteng Harisantoso");
@@ -121,23 +161,31 @@ int main(){
     tambahElemen(list, 1, "Jakarta", "Ferdi Ahmad");
     tambahElemen(list, 2, "Tangerang", "Thoriq M Fadhli");
     tambahElemen(list, 2, "Tangerang", "Muhammad Naruto");
-    hapusElemen(list, "Muhammad Naruto");
+    tambahElemen(list, 3, "Palembang", "Faris Abulkhoir");
+    tambahElemen(list, 3, "Palembang", "Raiden Shogun");
+    tambahElemen(list, 4, "Cimahi", "Alisha Nara");
+    tambahElemen(list, 4, "Cimahi", "Muhammad Fathur R");
+    hapusElemenNama(list, "Muhammad Naruto");
+    hapusElemenKota(list, "Cimahi");
 
     //Menampilkan ke layar
     for(int i = 0; i < list->jumlah; i++){
-        struct Node* first = list->array[i];
-        printf("%s: ", first->kota);
-        while(first != NULL){
-            printf("%s", first->nama);
-            if(first->next != NULL){
-                printf(", ");
+        if(list->array[i] != NULL){
+            struct Node* first = list->array[i];
+            printf("%s: ", first->kota);
+            while(first != NULL){
+                printf("%s", first->nama);
+                if(first->next != NULL){
+                    printf(", ");
+                }
+                else{
+                    printf(".");
+                }
+                first = first->next;
             }
-            else{
-                printf(".");
-            }
-            first = first->next;
+            printf("\n");
         }
-        printf("\n");
+        
     }
     
 }
