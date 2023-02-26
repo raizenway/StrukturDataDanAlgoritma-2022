@@ -14,7 +14,7 @@ struct Node{
     char* nama;
     char* kota;
     struct Node* next;
-};
+    };
 
 //STRUKTUR DATA UNTUK LIST ARRAY
 struct ArrayList{
@@ -150,7 +150,7 @@ void hapusElemenKota(struct ArrayList* list, char* kota)
 
 /*================================ PROGRAM UTAMA ================================*/
 int main(){
-    //Buatlah array list sejumlah 3
+    //Buatlah array list sejumlah 5
     struct ArrayList* list = buatArrayList(5);
 
     //Tambahkan elemen dengan parameter(list, indeks, kota, nama)
